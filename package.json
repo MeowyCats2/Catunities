@@ -1,6 +1,10 @@
 {
   "name": "my-project",
   "module": "index.ts",
+  "scripts": {
+    "start": "bun app.ts",
+    "dev": "bun --hot app.ts"
+  },
   "devDependencies": {
     "bun-types": "^1.0.1"
   },
