@@ -20,7 +20,7 @@ app.use(cookieParser())
 const createHeader = async (req) => `
 <div class="headerImage"></div>
 <div id="pbHeader" role="menubar">
-  <a href="/" role="menuitem"><img src="/logo.png" alt="Meowsborough"></a>
+  <a href="/" role="menuitem"><img src="/static/logo.png" alt="Meowsborough"></a>
   <div class="flex-grow"></div>
   <span>${cachedCatCount === null ? "???" : cachedCatCount} cats</span>
   ${await getUserInfo(req) ? `<span>${(await getUserInfo(req)).username}</span>` : `<a href="/signin" role="menuitem"><button>Sign in</button></a>`}
@@ -30,7 +30,7 @@ const generatePage = async (req, content) => {
   return `<!DOCTYPE HTML>
   <html lang="en">
   <head>
-  <title>Pawborough</title>
+  <title>Meowsborough</title>
   <meta name="format-detection" content="telephone=no">
   <link rel="stylesheet" href="/static/styles.css"
   </head>
