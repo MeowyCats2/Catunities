@@ -26,7 +26,7 @@ const createHeader = async (req) => `
   ${await getUserInfo(req) ? `<span>${(await getUserInfo(req)).username}</span>` : `<a href="/signin" role="menuitem"><button>Sign in</button></a>`}
 </div>`
 
-const generatePage = async (req, content) => {
+const generatePage = async (req, content, head) => {
   return `<!DOCTYPE HTML>
   <html lang="en">
   <head>
@@ -34,6 +34,9 @@ const generatePage = async (req, content) => {
   <meta name="format-detection" content="telephone=no">
   <link rel="stylesheet" href="/static/styles.css">
   <link rel="icon" type="image/x-icon" href="/static/favicon.png">
+  <meta property="og:site_name" content="Meowsborough">
+  <meta name="theme-color" content="#00FF0C">
+  ${head ?? ""}
   </head>
   <body>
   <a href="#content" class="skipToMainContent"><button>Skip to main content</button></a>
@@ -46,7 +49,7 @@ const generatePage = async (req, content) => {
 }
 
 app.get('/', async (req, res) => {
-  res.send(await generatePage(req, "Welcome! Note that this is just a fan site and isn't official."))
+  res.send(await generatePage(req, "Welcome! Note that this is just a fan site and isn't official.", `<meta property="og:title" content="Home Page">`))
 })
 
 app.get('/signin', async (req, res) => {
@@ -56,7 +59,7 @@ app.get('/signin', async (req, res) => {
 <label for="password">Password</label><br>
 <input type="text" id="password" name="password"><br>
 <input type="submit" value="Submit">
-</form>`))
+</form>`, `<meta property="og:title" content="Sign in">`))
 })
 
 app.post('/signin', async (req, res) => {
@@ -256,7 +259,7 @@ const generateImageURL = (body) => "/cat.png?data=" + encodeURIComponent(JSON.st
 
 app.post('/cat_creator', async (req, res) => {
   console.log(req.body)
-  res.send(await generatePage(req, `<img src="${generateImageURL(req.body)}" alt="Generated cat.">`))
+  res.send(await generatePage(req, `<img src="${generateImageURL(req.body)}" alt="Generated cat.">`), `<meta property="og:title" content="Cat Creator">`)
 })
 
 app.listen(port, () => {
@@ -380,7 +383,7 @@ app.get('/cats/:id', async (req, res) => {
       "Content-Type": "application/json",
       "X-CSRFToken": csrfToken
     }
-  })).json() : null
+  })).json() : null;
   const generateStat = (name, key, special) => `<div class="catStat${special ? " catStatSpecial" : ""}">
       <span class="catStatName">${name}</span>
       <span class="catStatQuality">poor</span>
@@ -395,10 +398,11 @@ app.get('/cats/:id', async (req, res) => {
         </div>
         <div style="background: ${dropdownData.palettes.find(palette => palette.name.toLowerCase() === catData.genetic_data[paletteKey].toLowerCase()).preview_color}" class="catAppearanceColor"></div>
       </div>`
+  const imageURL = imageRes.status === 404 ? generateImageURL({...catData.genetic_data, "borough": boroughData.find(borough => borough.name === catData.genetic_data.borough).id}) : catData.image
   res.send(await generatePage(req, `<div class="catHeader">
   <div class="catHeaderInfo">
     <div class="catImageWrapper">
-      <img src="${imageRes.status === 404 ? generateImageURL({...catData.genetic_data, "borough": boroughData.find(borough => borough.name === catData.genetic_data.borough).id}) : catData.image}" alt="Image of the cat.">
+      <img src="${imageURL}" alt="Image of the cat.">
     </div>
     <div class="catBiologicalInfo">
       <span>${catData.name}</span>
@@ -446,7 +450,7 @@ app.get('/cats/:id', async (req, res) => {
       </div>
     </div>
   </div>
-</div>`))
+</div>`, `<meta property="og:title" content="${catData.name}"><meta property="og:image" content="${imageURL}"><meta property="og:description" content="Created at ${catData.created_at}\nID: #${catData.id}">`))
 })
 
 const calculateCatCount = async () => {
@@ -475,11 +479,11 @@ const calculateCatCount = async () => {
 }
 
 app.get('/cat_counter', async (req, res) => {
-  res.send(await generatePage(req, await calculateCatCount()))
+  res.send(await generatePage(req, await calculateCatCount(), `<meta property="og:title" content="Cat Counter">`))
 })
 
 app.get('/last_cat_purge', async (req, res) => {
-  res.send(await generatePage(req, lastCatPurge.toString()))
+  res.send(await generatePage(req, lastCatPurge.toString(), `<meta property="og:title" content="Last Purge">`))
 })
 
 app.get('/api_sandbox', async (req, res) => {
@@ -494,7 +498,7 @@ app.get('/api_sandbox', async (req, res) => {
   <textarea id="body" name="body"></textarea>
   <input type="submit" value="Submit">
 </form>
-`))
+`, `<meta property="og:title" content="API Sandbox">`))
 })
 app.post('/api_sandbox', async (req, res) => {
   if (!req.body.url) return res.status(400).send(await generatePage(req, `No URL!`))
@@ -517,11 +521,11 @@ ${text}
 `))
 })
 app.use(async (req, res) => {
-  res.status(404).send(await generatePage(req, `You seem a bit lost. There's nothing to see here.`))
+  res.status(404).send(await generatePage(req, `You seem a bit lost. There's nothing to see here.`, `<meta property="og:title" content="404 Not Found">`))
 })
 
 app.use(async (error, req, res, next) => {
-  res.status(500).send(await generatePage(req, `Oops! An error occured!`))
+  res.status(500).send(await generatePage(req, `Oops! An error occured!`, `<meta property="og:title" content="500 Internal Server Error">`))
 })
 
 setInterval(async () => {
