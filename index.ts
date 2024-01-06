@@ -169,8 +169,11 @@ const generateCatCreator = async (selected) => {
       "X-CSRFToken": csrfToken
     }
   })).json()
-  const generateRadioList = (key, id) => `<div class="formRadioList">${data[key].map((attribute, index) => `<input type="radio" id="${attribute.name}${id}" name="${id}" value="${attribute.name}" required${id in selected && selected[id] === attribute.name ? " checked" : (index === 0 ? " checked": "")}><label for="${attribute.name}${id}" class="formRadioItem"><img src="${attribute.image}" alt="${attribute.name}"><span>${attribute.name}</span></label>`).join("")}</div>`
-  const generateColorChooser = (title, id) => `<div class="colorChooser"><h2>${title}</h2>${data.palettes.map((color, index) => `<div class="colorChooserColor"><input type="radio" id="${color.name}${id}" name="${id}" value="${color.name}" required${id in selected && selected[id] === color.name ? " checked" : (index === 0 ? " checked": "")}><label for="${color.name}${id}"><div class="colorChooserPreview" aria-label="${color.preview_color}" style="background: ${color.preview_color}"></div> ${color.name}</label></div>`).join("")}</div>`
+  const generateRadioList = (key, id) => {
+    const random = Math.floor(Math.random() * data[key].length);
+    return `<div class="formRadioList">${data[key].map((attribute, index) => `<input type="radio" id="${attribute.name}${id}" name="${id}" value="${attribute.name}" required${id in selected && selected[id] === attribute.name ? " checked" : (index === random ? " checked": "")}><label for="${attribute.name}${id}" class="formRadioItem"><img src="${attribute.image}" alt="${attribute.name}"><span>${attribute.name}</span></label>`).join("")}</div>`;
+  }
+  const generateColorChooser = (title, id) => `<div class="colorChooser"><h2>${title}</h2>${data.palettes.map((color, index) => `<div class="colorChooserColor"><input type="radio" id="${color.name}${id}" name="${id}" value="${color.name}" required${id in selected && selected[id] === color.name ? " checked" : (index === 0 ? " checked": "")}><label for="${color.name}${id}"><div class="colorChooserPreview" aria-label="${color.preview_color}" style="background: ${color.preview_color}"></div> ${color.name}</label></div>`).join("")}</div>`;
   const generateBoroughChooser = (id) => `<div class="formRadioList">${boroughs.map((attribute, index) => `<input type="radio" id="${attribute.id}${id}" name="${id}" value="${attribute.id}" required${id in selected && selected[id] === attribute.name ? " checked" : (index === 0 ? " checked": "")}><label for="${attribute.id}${id}" class="formRadioItem"><img src="${attribute.emblem}" alt="${attribute.name}"><span>${attribute.name}</span></label>`).join("")}</div>`
   const generateEyePalettes = (key, id) => `<div class="formRadioList">${data[key].filter(attribute => attribute.borough === "Harvest").map((attribute, index) => `<input type="radio" id="${attribute.name}${id}" name="${id}" value="${attribute.name}" required${id in selected && selected[id] === attribute.name ? " checked" : (index === 0 ? " checked": "")}><label for="${attribute.name}${id}" class="formRadioItem"><img src="${attribute.image}" alt="${attribute.name}"><span>${attribute.name}</span></label>`).join("")}</div>`
   
@@ -525,6 +528,7 @@ app.use(async (req, res) => {
 })
 
 app.use(async (error, req, res, next) => {
+  console.error(error)
   res.status(500).send(await generatePage(req, `Oops! An error occured!`, `<meta property="og:title" content="500 Internal Server Error">`))
 })
 
