@@ -32,7 +32,8 @@ const generatePage = async (req, content) => {
   <head>
   <title>Meowsborough</title>
   <meta name="format-detection" content="telephone=no">
-  <link rel="stylesheet" href="/static/styles.css"
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="icon" type="image/x-icon" href="/static/favicon.png">
   </head>
   <body>
   <a href="#content" class="skipToMainContent"><button>Skip to main content</button></a>
