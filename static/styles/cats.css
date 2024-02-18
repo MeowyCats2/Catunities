@@ -1,0 +1,147 @@
+.catHeader {
+  display: flex;
+  flex-direcion: column;
+  background: #e0e0e0;
+  margin-bottom: 1rem;
+}
+
+.catHeaderInfo {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.catImageWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid black;
+  background: white;
+}
+
+.catImageWrapper img {
+  width: 8vw;
+}
+
+.catBiologicalInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.catInformation {
+  display: flex;
+  gap: 1rem;
+}
+
+.catInformation > div {
+  flex-grow: 1;
+  background: #fbf8f3;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 1rem;
+}
+
+.catTraits {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.catTraitsTitle {
+  font-size: 2rem;
+}
+
+.catTraitsMain {
+  display: flex;
+  gap: 1rem;
+}
+
+.catAppearance {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.catAppearancePart {
+  display: flex;
+  background: white;
+  padding: 0.5rem;
+  gap: 0.5rem;
+}
+
+.catAppearancePart img {
+  width: 5vw;
+}
+
+.catAppearanceDetails {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.catAppearanceColor {
+  width: 5vw;
+  height: 5vw;
+}
+
+.catPhysicalTraits {
+  display: flex;
+  flex-direction: column;
+}
+
+.catPhysicalValue {
+  font-weight: 300;
+}
+
+.catInformation > .catStats {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 1fr;
+  flex-grow: 0;
+}
+
+.catStat {
+  background: #e5e1d0;
+  color: black;
+  padding: 0.5rem;
+  width: 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.catStatName {
+  font-size: 0.9rem;
+}
+.catStatQuality {
+  font-weight: 300;
+  font-size: 0.7rem;
+}
+
+.catStatValue {
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+.catStatDice {
+  background: #fffdf8;
+  color: #7d7d7d;
+  width: 100%;
+  font-size: 0.7rem;
+  padding: 0.2rem;
+  text-align: center;
+}
+
+.catStatsLineBreak {
+  flex-basis: 100%;
+  height: 0;
+}
+
+.catStatSpecial {
+  background: #363533;
+  color: #fffdf8;
+}
+
+.catStat:last-child {
+  grid-column: 2;
+}

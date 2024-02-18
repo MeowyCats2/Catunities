@@ -1,0 +1,115 @@
+:root {
+  --theme-primary: #172618;
+  --cat-creator-selected: #d3b15a;
+}
+@font-face {
+  font-family: Lato;
+  font-weight: normal;
+  font-style: normal;
+  src: url("/static/font/Lato/Lato-Regular.ttf") format("truetype")
+}
+@font-face {
+  font-family: Lato;
+  font-weight: bold;
+  font-style: normal;
+  src: url("/static/font/Lato/Lato-Bold.ttf") format("truetype")
+}
+@font-face {
+  font-family: Lato;
+  font-weight: normal;
+  font-style: italic;
+  src: url("/static/font/Lato/Lato-Italic.ttf") format("truetype")
+}
+@font-face {
+  font-family: Lato;
+  font-weight: bold;
+  font-style: italic;
+  src: url("/static/font/Lato/Lato-BoldItalic.ttf") format("truetype")
+}
+@font-face {
+  font-family: Lato;
+  font-weight: 300;
+  font-style: normal;
+  src: url("/static/font/Lato/Lato-Light.ttf") format("truetype")
+}
+@font-face {
+  font-family: Lato;
+  font-weight: 300;
+  font-style: italic;
+  src: url("/static/font/Lato/Lato-LightItalic.ttf") format("truetype")
+}
+body {
+  font-family: Lato, sans-serif;
+  font-size: 16px;
+  margin: 0;
+  scroll-behavior: smooth;
+}
+.headerImage {
+  background-image: url("https://www.pawborough.net/_nuxt/Default_Header_Day.6ff4c060.webp");
+  background-x: 50%;
+  background-y: center;
+  background-size: cover;
+  height: 10vh;
+  min-width: 100vw;
+}
+#pbHeader nav {
+  display: flex;
+  padding: 0.5rem;
+  color: #E0C479;
+  background: var(--theme-primary);
+  height: 8vh;
+  height: 8dvh;
+  box-sizing: border-box;
+  align-items: stretch;
+}
+#pbHeader img {
+  height: calc(8vh - 1rem);
+  height: calc(8dvh - 1rem);
+}
+.flex-grow {
+  flex-grow: 1;
+}
+button, input[type=submit] {
+  background: #2F2019;
+  color: #E0C479;
+  border: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  -webkit-appearance: none;
+  border-radius: 0.3rem;
+}
+#content {
+  background: #F5F0E5;
+  padding: 1rem;
+  min-height: 92vh;
+  min-height: 92dvh;
+  box-sizing: border-box;
+}
+input[type=text] {
+  border: 1px solid black;
+  background: white;
+}
+#showPassword:not(:checked) ~ #password {
+  -webkit-text-security: disc;
+}
+.breadcrumbs {
+  color: #676665;
+}
+.breadcrumbs a {
+  text-decoration: none;
+  color: inherit;
+}
+.currBreadcrumb {
+  font-weight: bold;
+}
+
+.skipToMainContent {
+  left: 50%;
+  position: absolute;
+  transform: translateY(-100%);
+  transition: transform 0.3s;
+}
+
+.skipToMainContent:focus {
+  transform: translateY(0%);
+}

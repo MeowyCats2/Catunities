@@ -1,0 +1,73 @@
+@import url("/static/styles/forms.css");
+
+.catCreatorSections {
+  display: flex;
+  visibility: hidden;
+  max-height: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+  transition: max-height 1s, margin-bottom 1s, visibility 1s;
+}
+
+#generalRadio:checked ~ #generalSection,
+#overcoatRadio:checked ~ #overcoatSection,
+#undercoatRadio:checked ~ #undercoatSection,
+#accent1Radio:checked ~ #accent1Section,
+#accent2Radio:checked ~ #accent2Section,
+#eyesRadio:checked ~ #eyesSection,
+#whiteCoverageRadio:checked ~ #whiteCoverageSection {
+  visibility: visible;
+  max-height: 100vh;
+  margin-bottom: 1rem;
+}
+
+.catCreatorSections {
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.catCreatorSections > div {
+  flex-grow: 1;
+}
+
+.catCreatorSection, .colorChooser {
+  background: white;
+  border: 2px solid black;
+  padding: 1rem;
+}
+
+.catCreatorHalf {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.colorChooser {
+  display: flex;
+  flex-direction: column;
+  max-height: 40vh;
+  overflow: scroll;
+}
+
+.colorChooserColor label {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.3rem;
+}
+
+.colorChooserPreview {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid black;
+  border-radius: 0.2rem;
+}
+
+.colorChooserColor input[type=radio]:checked + label {
+  background: var(--theme-primary);
+  color: var(--cat-creator-selected);
+}
+
+.catPreview {
+  width: 80vw;
+}

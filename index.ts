@@ -34,7 +34,7 @@ const generatePage = async (req, content, head) => {
   <head>
   <title>Catunities</title>
   <meta name="format-detection" content="telephone=no">
-  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="stylesheet" href="/static/styles/main.css">
   <link rel="icon" type="image/x-icon" href="/static/favicon.png">
   <meta property="og:site_name" content="Catunities">
   <meta name="theme-color" content="#00FF0C">
@@ -122,7 +122,7 @@ app.get('/onboarding/borough', async (req, res) => {
   })
   const boroughs = await apiRes.json()
   console.log(req.cookies)
-  res.send(await generatePage(req, `<nav class="breadcrumbs"><a href="/signup">Create an account</a> | <span class="currBreadcrumb">Choose a Borough</span></nav><br/>Click the borough you want to be.<div class="boroughChooseList" role="form">${boroughs.map(borough => `<form role="none" action="/onboarding/borough" method="POST"><input type="hidden" name="borough" value="${borough.id}"><label for="borough${borough.id}Submit" class="boroughChooseItem"><img src="${borough.emblem}" alt="${borough.name}"><span>${borough.name}</span></label><input type="submit" id="borough${borough.id}Submit"></form>`).join("")}</div>`))
+  res.send(await generatePage(req, `<nav class="breadcrumbs"><a href="/signup">Create an account</a> | <span class="currBreadcrumb">Choose a Borough</span></nav><br/>Click the borough you want to be.<form action="/onboarding/borough" method="POST" class="boroughChooseList">${boroughs.map(borough => `<div><label for="borough${borough.id}Submit" class="boroughChooseItem"><img src="${borough.emblem}" alt="${borough.name}"><span>${borough.name}</span></label><input type="submit" id="borough${borough.id}Submit" name="borough" value="${borough.id}"></div>`).join("")}</div>`, `<link rel="stylesheet" href="/static/styles/forms.css">`))
 })
 
 app.post('/onboarding/borough', async (req, res) => {
@@ -183,14 +183,21 @@ const generateCatCreator = async (selected) => {
   const generateBoroughChooser = (id) => `<div class="formRadioList">${boroughs.map((attribute, index) => `<input type="radio" id="${attribute.id}${id}" name="${id}" value="${attribute.id}" required${id in selected && selected[id] === attribute.name ? " checked" : (index === 0 ? " checked": "")}><label for="${attribute.id}${id}" class="formRadioItem"><img src="${attribute.emblem}" alt="${attribute.name}"><span>${attribute.name}</span></label>`).join("")}</div>`
   const generateEyePalettes = (key, id) => `<div class="formRadioList">${data[key].filter(attribute => attribute.borough === "Harvest").map((attribute, index) => `<input type="radio" id="${attribute.name}${id}" name="${id}" value="${attribute.name}" required${id in selected && selected[id] === attribute.name ? " checked" : (index === 0 ? " checked": "")}><label for="${attribute.name}${id}" class="formRadioItem"><img src="${attribute.image}" alt="${attribute.name}"><span>${attribute.name}</span></label>`).join("")}</div>`
   
-  return `<div class="catCreatorButtons">
-    <a href="#generalSection"><button type="button">General</button></a>
-    <a href="#overcoatSection"><button type="button">Overcoat</button></a>
-    <a href="#undercoatSection"><button type="button">Undercoat</button></a>
-    <a href="#accent1Section"><button type="button">Accent 1</button></a>
-    <a href="#accent2Section"><button type="button">Accent 2</button></a>
-    <a href="#eyesSection"><button type="button">Eyes</button></a>
-    <a href="#whiteCoverageSection"><button type="button">White Coverage</button></a>
+  return `<input type="radio" id="generalRadio" class="sectionRadio" name="section" checked>
+  <input type="radio" id="overcoatRadio" class="sectionRadio" name="section">
+  <input type="radio" id="undercoatRadio" class="sectionRadio" name="section">
+  <input type="radio" id="accent1Radio" class="sectionRadio" name="section">
+  <input type="radio" id="accent2Radio" class="sectionRadio" name="section">
+  <input type="radio" id="eyesRadio" class="sectionRadio" name="section">
+  <input type="radio" id="whiteCoverageRadio" class="sectionRadio" name="section">
+  <div class="catCreatorButtons">
+    <button type="button"><label for="generalRadio">General</label></button>
+    <button type="button"><label for="overcoatRadio">Overcoat</label></button>
+    <button type="button"><label for="undercoatRadio">Undercoat</label></button>
+    <button type="button"><label for="accent1Radio">Accent 1</label></button>
+    <button type="button"><label for="accent2Radio">Accent 2</label></button>
+    <button type="button"><label for="eyesRadio">Eyes</label></button>
+    <button type="button"><label for="whiteCoverageRadio">White Coverage</label></button>
   </div>
   <div class="catCreatorSections" id="generalSection">
     <div class="catCreatorSection">
@@ -261,7 +268,7 @@ const generateCatCreator = async (selected) => {
 }
 
 app.get('/cat_creator', async (req, res) => {
-  return res.send(await generatePage(req, `<form action="/cat_creator" method="POST">${await generateCatCreator(req.query)}<input type="submit" value="Submit"></form>`))
+  return res.send(await generatePage(req, `<form action="/cat_creator" method="POST">${await generateCatCreator(req.query)}<input type="submit" value="Submit"></form>`, `<link rel="stylesheet" href="/static/styles/cat_creator.css">`))
 })
 
 const generateImageURL = (body) => "/cat.png?data=" + encodeURIComponent(JSON.stringify({"gender": body.gender, "age": body.age, "breed": body.breed, "overcoat_pattern":body.overcoat_pattern,"overcoat_palette":body.overcoat_palette,"undercoat_pattern":body.undercoat_pattern,"undercoat_palette":body.undercoat_palette,"accent_pattern_1":body.accent_pattern_1,"accent_palette_1":body.accent_palette_1,"accent_pattern_2":body.accent_pattern_2,"accent_palette_2":body.accent_palette_2,"eye_pattern":body.eye_pattern,"eye_palette":body.eye_palette,"borough":body.borough,"white_coverage":body.white_coverage}))
@@ -269,10 +276,6 @@ const generateImageURL = (body) => "/cat.png?data=" + encodeURIComponent(JSON.st
 app.post('/cat_creator', async (req, res) => {
   console.log(req.body)
   res.send(await generatePage(req, `<img src="${generateImageURL(req.body)}" alt="Generated cat.">`), `<meta property="og:title" content="Cat Creator">`)
-})
-
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
 })
 
 app.get('/onboarding/founder', async (req, res) => {
@@ -289,7 +292,7 @@ ${req.query.preview ? `<img src="${generateImageURL(req.query)}" alt="Generated 
   <input type="text" name="name" id="name" value="${req.query.name ? ` ${req.query.name.replaceAll('"', "&quot;")}` : generateName()}">
   ${await generateCatCreator(req.query)}
   <input type="submit" value="Submit"><button formmethod="GET" name="preview" value="true">Preview</button>
-</form>`))
+</form>`, `<link rel="stylesheet" href="/static/styles/cat_creator.css">`))
 })
 const createCat = async (body) => {
   const renderRes = await fetch(endpoint + "/cat_creator/generate/?cat_type=onboarding", {
@@ -352,7 +355,7 @@ ${req.query.preview ? `<img src="${generateImageURL(req.query)}" alt="Generated 
   <input type="text" name="name" id="name" value="${req.query.name ? ` ${req.query.name.replaceAll('"', "&quot;")}` : generateName()}">
   ${await generateCatCreator(req.query)}
   <input type="submit" value="Submit"><button formmethod="GET" name="preview" value="true">Preview</button>
-</form>`))
+</form>`, `<link rel="stylesheet" href="/static/styles/cat_creator.css">`))
 })
 
 app.post('/onboarding/cofounder', async (req, res) => {
@@ -536,6 +539,10 @@ app.use(async (req, res) => {
 app.use(async (error, req, res, next) => {
   console.error(error)
   res.status(500).send(await generatePage(req, `Oops! An error occured!`, `<meta property="og:title" content="500 Internal Server Error">`))
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
 })
 
 setInterval(async () => {

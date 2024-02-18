@@ -1,0 +1,60 @@
+.boroughChooseList {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.formRadioList {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.boroughChooseList form, .formRadioList {
+  display: flex;
+  align-items: stretch;
+}
+
+.boroughChooseList input[type=submit], .formRadioList input[type=radio], .colorChooserColor input[type=radio],
+.sectionRadio {
+  display: none;
+}
+
+.formRadioList input[type=radio]:checked + label {
+  background: #C5C0B5;
+  border: 2px solid black;
+  box-sizing: border-box;
+}
+
+.boroughChooseItem, .formRadioItem {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  background: #E5E0D5;
+  padding: .7rem;
+}
+
+.formRadioItem {
+  font-size: 0.8rem;
+}
+
+.boroughChooseItem img {
+  width: 10vw;
+  height: 10vw;
+}
+
+.formRadioItem img {
+  width: 5vw;
+  height: 5vw;
+}
+
+.boroughChooseItem span {
+  width: 10vw;
+}
+
+.formRadioItem span {
+  width: 5vw;
+}
