@@ -19,12 +19,14 @@ app.use(cookieParser())
 
 const createHeader = async (req) => `
 <div class="headerImage"></div>
-<div id="pbHeader" role="menubar">
-  <a href="/" role="menuitem"><img src="/static/logo.png" alt="Meowsborough"></a>
-  <div class="flex-grow"></div>
-  <span>${cachedCatCount === null ? "???" : cachedCatCount} cats</span>
-  ${await getUserInfo(req) ? `<span>${(await getUserInfo(req)).username}</span>` : `<a href="/signin" role="menuitem"><button>Sign in</button></a>`}
-</div>`
+<header id="pbHeader">
+  <nav role="menubar">
+    <a href="/" role="menuitem"><img src="/static/logo.png" alt="Meowsborough"></a>
+    <div class="flex-grow"></div>
+    <span>${cachedCatCount === null ? "???" : cachedCatCount} cats</span>
+    ${await getUserInfo(req) ? `<span>${(await getUserInfo(req)).username}</span>` : `<a href="/signin" role="menuitem"><button>Sign in</button></a>`}
+  </nav>
+</header>`
 
 const generatePage = async (req, content, head) => {
   return `<!DOCTYPE HTML>
@@ -41,9 +43,9 @@ const generatePage = async (req, content, head) => {
   <body>
   <a href="#content" class="skipToMainContent"><button>Skip to main content</button></a>
   ${await createHeader(req)}
-  <div id="content">
+  <main id="content">
   ${content}
-  </div>
+  </main>
   </body>
   </html>`
 }
@@ -55,9 +57,13 @@ app.get('/', async (req, res) => {
 app.get('/signin', async (req, res) => {
   res.send(await generatePage(req, `<form action="/signin" method="POST">
 <label for="username">Username</label><br>
-<input type="text" id="username" name="username"><br>
-<label for="password">Password</label><br>
-<input type="text" id="password" name="password"><br>
+<input type="text" id="username" name="username" autocomplete="username" required>
+<br>
+<label for="password">Password</label>
+<br>
+<input type="checkbox" id="showPassword"> <label for="showPassword">Show Password</label>
+<br>
+<input type="text" id="password" name="password" autocomplete="current-password" required><br/>
 <input type="submit" value="Submit">
 </form>`, `<meta property="og:title" content="Sign in">`))
 })

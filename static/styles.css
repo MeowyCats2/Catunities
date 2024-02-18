@@ -6,37 +6,37 @@
   font-family: Lato;
   font-weight: normal;
   font-style: normal;
-  src: url("/static/font/Lato-Regular.ttf") format("truetype")
+  src: url("/static/font/Lato/Lato-Regular.ttf") format("truetype")
 }
 @font-face {
   font-family: Lato;
   font-weight: bold;
   font-style: normal;
-  src: url("/static/font/Lato-Bold.ttf") format("truetype")
+  src: url("/static/font/Lato/Lato-Bold.ttf") format("truetype")
 }
 @font-face {
   font-family: Lato;
   font-weight: normal;
   font-style: italic;
-  src: url("/static/font/Lato-Italic.ttf") format("truetype")
+  src: url("/static/font/Lato/Lato-Italic.ttf") format("truetype")
 }
 @font-face {
   font-family: Lato;
   font-weight: bold;
   font-style: italic;
-  src: url("/static/font/Lato-BoldItalic.ttf") format("truetype")
+  src: url("/static/font/Lato/Lato-BoldItalic.ttf") format("truetype")
 }
 @font-face {
   font-family: Lato;
   font-weight: 300;
   font-style: normal;
-  src: url("/static/font/Lato-Light.ttf") format("truetype")
+  src: url("/static/font/Lato/Lato-Light.ttf") format("truetype")
 }
 @font-face {
   font-family: Lato;
   font-weight: 300;
   font-style: italic;
-  src: url("/static/font/Lato-LightItalic.ttf") format("truetype")
+  src: url("/static/font/Lato/Lato-LightItalic.ttf") format("truetype")
 }
 body {
   font-family: Lato, sans-serif;
@@ -52,7 +52,7 @@ body {
   height: 10vh;
   min-width: 100vw;
 }
-#pbHeader {
+#pbHeader nav {
   display: flex;
   padding: 0.5rem;
   color: #E0C479;
@@ -88,6 +88,9 @@ button, input[type=submit] {
 input[type=text] {
   border: 1px solid black;
   background: white;
+}
+#showPassword:not(:checked) ~ #password {
+  -webkit-text-security: disc;
 }
 .breadcrumbs {
   color: #676665;
