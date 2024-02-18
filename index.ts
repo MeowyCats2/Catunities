@@ -21,7 +21,7 @@ const createHeader = async (req) => `
 <div class="headerImage"></div>
 <header id="pbHeader">
   <nav role="menubar">
-    <a href="/" role="menuitem"><img src="/static/logo.png" alt="Meowsborough"></a>
+    <a href="/" role="menuitem"><img src="/static/logo.png" alt="Catunities"></a>
     <div class="flex-grow"></div>
     <span>${cachedCatCount === null ? "???" : cachedCatCount} cats</span>
     ${await getUserInfo(req) ? `<span>${(await getUserInfo(req)).username}</span>` : `<a href="/signin" role="menuitem"><button>Sign in</button></a>`}
@@ -32,11 +32,11 @@ const generatePage = async (req, content, head) => {
   return `<!DOCTYPE HTML>
   <html lang="en">
   <head>
-  <title>Meowsborough</title>
+  <title>Catunities</title>
   <meta name="format-detection" content="telephone=no">
   <link rel="stylesheet" href="/static/styles.css">
   <link rel="icon" type="image/x-icon" href="/static/favicon.png">
-  <meta property="og:site_name" content="Meowsborough">
+  <meta property="og:site_name" content="Catunities">
   <meta name="theme-color" content="#00FF0C">
   ${head ?? ""}
   </head>
