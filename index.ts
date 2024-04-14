@@ -275,7 +275,7 @@ const generateImageURL = (body) => "/cat.png?data=" + encodeURIComponent(JSON.st
 
 app.post('/cat_creator', async (req, res) => {
   console.log(req.body)
-  res.send(await generatePage(req, `<img src="${generateImageURL(req.body)}" alt="Generated cat.">`), `<meta property="og:title" content="Cat Creator">`)
+  res.send(await generatePage(req, `<img src="${generateImageURL(req.body)}" alt="Generated cat.">`, `<meta property="og:title" content="Cat Creator">`))
 })
 
 app.get('/onboarding/founder', async (req, res) => {
@@ -462,7 +462,7 @@ app.get('/cats/:id', async (req, res) => {
       </div>
     </div>
   </div>
-</div>`, `<meta property="og:title" content="${catData.name}"><meta property="og:image" content="${imageURL}"><meta property="og:description" content="Created at ${catData.created_at}\nID: #${catData.id}">`))
+</div>`, `<meta property="og:title" content="${catData.name}"><meta property="og:image" content="${imageURL}"><meta property="og:description" content="Created at ${catData.created_at}\nID: #${catData.id}"><link rel="stylesheet" href="/static/styles/cats.css">`))
 })
 
 const calculateCatCount = async () => {
