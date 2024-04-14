@@ -21,10 +21,10 @@ const createHeader = async (req) => `
 <div class="headerImage"></div>
 <header id="pbHeader">
   <nav role="menubar">
-    <a href="/" role="menuitem"><img src="/static/logo.png" alt="Catunities"></a>
-    <div class="flex-grow"></div>
-    <span>${cachedCatCount === null ? "???" : cachedCatCount} cats</span>
-    ${await getUserInfo(req) ? `<span>${(await getUserInfo(req)).username}</span>` : `<a href="/signin" role="menuitem"><button>Sign in</button></a>`}
+	<a href="/" role="menuitem"><img src="/static/logo.png" alt="Catunities"></a>
+	<div class="flex-grow"></div>
+	<span>${cachedCatCount === null ? "???" : cachedCatCount} cats</span>
+	${await getUserInfo(req) ? `<span>${(await getUserInfo(req)).username}</span>` : `<a href="/signin" role="menuitem"><button>Sign in</button></a>`}
   </nav>
 </header>`
 
@@ -70,13 +70,13 @@ app.get('/signin', async (req, res) => {
 
 app.post('/signin', async (req, res) => {
   const apiRes = await fetch(endpoint + "/auth/login/", {
-    "method": "POST",
-    "headers": {
-      "Content-Type": "application/json",
-      "X-CSRFToken": csrfToken,
-      "Cookie": "csrftoken=" + csrfToken
-    },
-    "body": JSON.stringify({username: req.body.username, password: req.body.password})
+	"method": "POST",
+	"headers": {
+	  "Content-Type": "application/json",
+	  "X-CSRFToken": csrfToken,
+	  "Cookie": "csrftoken=" + csrfToken
+	},
+	"body": JSON.stringify({username: req.body.username, password: req.body.password})
   })
   console.log(apiRes.headers.getSetCookie())
   const userData = await apiRes.json()
@@ -88,16 +88,16 @@ app.post('/signin', async (req, res) => {
 const getUserInfo = async (req) => {
   if (req.user) return req.user
   const apiRes = await fetch(endpoint + "/users/me/", {
-    "method": "GET",
-    "headers": {
-      "Content-Type": "application/json",
-      "X-CSRFToken": req.cookies.csrftoken,
-      "Cookie": `sessionid=${req.cookies.sessionid}; csrftoken=${req.cookies.csrftoken}`
-    }
+	"method": "GET",
+	"headers": {
+	  "Content-Type": "application/json",
+	  "X-CSRFToken": req.cookies.csrftoken,
+	  "Cookie": `sessionid=${req.cookies.sessionid}; csrftoken=${req.cookies.csrftoken}`
+	}
   })
   if (apiRes.status === 401) {
-    req.user = false
-    return false
+	req.user = false
+	return false
   }
   req.user = await apiRes.json()
   return req.user
@@ -113,12 +113,12 @@ app.get('/me', async (req, res) => {
 app.get('/onboarding/borough', async (req, res) => {
   if (await getUserInfo(req) === false) res.redirect(302, "/signin")
   const apiRes = await fetch(endpoint + "/boroughs/", {
-    "method": "GET",
-    "headers": {
-      "Content-Type": "application/json",
-      "X-CSRFToken": req.cookies.csrftoken,
-      "Cookie": `sessionid=${req.cookies.sessionid}; csrftoken=${req.cookies.csrftoken}`
-    }
+	"method": "GET",
+	"headers": {
+	  "Content-Type": "application/json",
+	  "X-CSRFToken": req.cookies.csrftoken,
+	  "Cookie": `sessionid=${req.cookies.sessionid}; csrftoken=${req.cookies.csrftoken}`
+	}
   })
   const boroughs = await apiRes.json()
   console.log(req.cookies)
@@ -128,28 +128,28 @@ app.get('/onboarding/borough', async (req, res) => {
 app.post('/onboarding/borough', async (req, res) => {
   if (await getUserInfo(req) === false) res.redirect(302, "/signin")
   const apiRes = await fetch(endpoint + "/users/" + (await getUserInfo(req)).id + "/", {
-    "method": "PATCH",
-    "headers": {
-      "Content-Type": "application/json",
-      "X-CSRFToken": req.cookies.csrftoken,
-      "Cookie": `sessionid=${req.cookies.sessionid}; csrftoken=${req.cookies.csrftoken}`
-    },
-    "body": JSON.stringify({"borough": req.body.borough})
+	"method": "PATCH",
+	"headers": {
+	  "Content-Type": "application/json",
+	  "X-CSRFToken": req.cookies.csrftoken,
+	  "Cookie": `sessionid=${req.cookies.sessionid}; csrftoken=${req.cookies.csrftoken}`
+	},
+	"body": JSON.stringify({"borough": req.body.borough})
   })
   if (!apiRes.ok) await generatePage(req, "An unexpected error occured: " + JSON.stringify(await apiRes.json()))
   res.redirect(303, "/onboarding/founder#generalSection")
 })
 app.get('/cat.png', async (req, res) => {
   const apiRes = await fetch(endpoint + "/cat_creator/generate/?cat_type=onboarding", {
-    "method": "POST",
-    "headers": {
-      "Content-Type": "application/json",
-      "X-CSRFToken": csrfToken
-    },
-    "body": req.query.data
+	"method": "POST",
+	"headers": {
+	  "Content-Type": "application/json",
+	  "X-CSRFToken": csrfToken
+	},
+	"body": req.query.data
   })
   if (!apiRes.headers.get("Content-Type").startsWith("multipart/form-data")) {
-    return res.status(400).send({"error": "Invalid cat.", "content": await apiRes.text()})
+	return res.status(400).send({"error": "Invalid cat.", "content": await apiRes.text()})
   }
   const formData = await apiRes.formData()
   const file = formData.get("file")
@@ -161,23 +161,23 @@ app.get('/cat.png', async (req, res) => {
 })
 const generateCatCreator = async (selected) => {
   const apiRes = await fetch(endpoint + "/cat_creator/dropdown_options/", {
-    "method": "GET",
-    "headers": {
-      "Content-Type": "application/json",
-      "X-CSRFToken": csrfToken
-    }
+	"method": "GET",
+	"headers": {
+	  "Content-Type": "application/json",
+	  "X-CSRFToken": csrfToken
+	}
   })
   const data = await apiRes.json()
   const boroughs = await (await fetch(endpoint + "/boroughs/", {
-    "method": "GET",
-    "headers": {
-      "Content-Type": "application/json",
-      "X-CSRFToken": csrfToken
-    }
+	"method": "GET",
+	"headers": {
+	  "Content-Type": "application/json",
+	  "X-CSRFToken": csrfToken
+	}
   })).json()
   const generateRadioList = (key, id) => {
-    const random = Math.floor(Math.random() * data[key].length);
-    return `<div class="formRadioList">${data[key].map((attribute, index) => `<input type="radio" id="${attribute.name}${id}" name="${id}" value="${attribute.name}" required${id in selected && selected[id] === attribute.name ? " checked" : (index === random ? " checked": "")}><label for="${attribute.name}${id}" class="formRadioItem"><img src="${attribute.image}" alt="${attribute.name}"><span>${attribute.name}</span></label>`).join("")}</div>`;
+	const random = Math.floor(Math.random() * data[key].length);
+	return `<div class="formRadioList">${data[key].map((attribute, index) => `<input type="radio" id="${attribute.name}${id}" name="${id}" value="${attribute.name}" required${id in selected && selected[id] === attribute.name ? " checked" : (index === random ? " checked": "")}><label for="${attribute.name}${id}" class="formRadioItem"><img src="${attribute.image}" alt="${attribute.name}"><span>${attribute.name}</span></label>`).join("")}</div>`;
   }
   const generateColorChooser = (title, id) => `<div class="colorChooser"><h2>${title}</h2>${data.palettes.map((color, index) => `<div class="colorChooserColor"><input type="radio" id="${color.name}${id}" name="${id}" value="${color.name}" required${id in selected && selected[id] === color.name ? " checked" : (index === 0 ? " checked": "")}><label for="${color.name}${id}"><div class="colorChooserPreview" aria-label="${color.preview_color}" style="background: ${color.preview_color}"></div> ${color.name}</label></div>`).join("")}</div>`;
   const generateBoroughChooser = (id) => `<div class="formRadioList">${boroughs.map((attribute, index) => `<input type="radio" id="${attribute.id}${id}" name="${id}" value="${attribute.id}" required${id in selected && selected[id] === attribute.name ? " checked" : (index === 0 ? " checked": "")}><label for="${attribute.id}${id}" class="formRadioItem"><img src="${attribute.emblem}" alt="${attribute.name}"><span>${attribute.name}</span></label>`).join("")}</div>`
@@ -191,79 +191,79 @@ const generateCatCreator = async (selected) => {
   <input type="radio" id="eyesRadio" class="sectionRadio" name="section">
   <input type="radio" id="whiteCoverageRadio" class="sectionRadio" name="section">
   <div class="catCreatorButtons">
-    <button type="button"><label for="generalRadio">General</label></button>
-    <button type="button"><label for="overcoatRadio">Overcoat</label></button>
-    <button type="button"><label for="undercoatRadio">Undercoat</label></button>
-    <button type="button"><label for="accent1Radio">Accent 1</label></button>
-    <button type="button"><label for="accent2Radio">Accent 2</label></button>
-    <button type="button"><label for="eyesRadio">Eyes</label></button>
-    <button type="button"><label for="whiteCoverageRadio">White Coverage</label></button>
+	<button type="button"><label for="generalRadio">General</label></button>
+	<button type="button"><label for="overcoatRadio">Overcoat</label></button>
+	<button type="button"><label for="undercoatRadio">Undercoat</label></button>
+	<button type="button"><label for="accent1Radio">Accent 1</label></button>
+	<button type="button"><label for="accent2Radio">Accent 2</label></button>
+	<button type="button"><label for="eyesRadio">Eyes</label></button>
+	<button type="button"><label for="whiteCoverageRadio">White Coverage</label></button>
   </div>
   <div class="catCreatorSections" id="generalSection">
-    <div class="catCreatorSection">
-      <h2>Breed</h2>
-      ${generateRadioList("breeds", "breed")}
-    </div>
-    <div class="catCreatorHalf">
-      <div class="catCreatorSection">
-        <h2>Gender</h2>
-        ${generateRadioList("genders", "gender")}
-      </div>
-      <div class="catCreatorSection">
-        <h2>Age</h2>
-        ${generateRadioList("ages", "age")}
-      </div>
-    </div>
+	<div class="catCreatorSection">
+	  <h2>Breed</h2>
+	  ${generateRadioList("breeds", "breed")}
+	</div>
+	<div class="catCreatorHalf">
+	  <div class="catCreatorSection">
+		<h2>Gender</h2>
+		${generateRadioList("genders", "gender")}
+	  </div>
+	  <div class="catCreatorSection">
+		<h2>Age</h2>
+		${generateRadioList("ages", "age")}
+	  </div>
+	</div>
   </div>
   <div class="catCreatorSections" id="overcoatSection">
-    <div class="catCreatorSection">
-      <h2>Overcoat Pattern</h2>
-      ${generateRadioList("overcoat_patterns", "overcoat_pattern")}
-    </div>
-    ${generateColorChooser("Overcoat Color", "overcoat_palette")}
+	<div class="catCreatorSection">
+	  <h2>Overcoat Pattern</h2>
+	  ${generateRadioList("overcoat_patterns", "overcoat_pattern")}
+	</div>
+	${generateColorChooser("Overcoat Color", "overcoat_palette")}
   </div>
   <div class="catCreatorSections" id="undercoatSection">
-    <div class="catCreatorSection">
-      <h2>Undercoat Pattern</h2>
-      ${generateRadioList("undercoat_patterns", "undercoat_pattern")}
-    </div>
-    ${generateColorChooser("Undercoat Color", "undercoat_palette")}
+	<div class="catCreatorSection">
+	  <h2>Undercoat Pattern</h2>
+	  ${generateRadioList("undercoat_patterns", "undercoat_pattern")}
+	</div>
+	${generateColorChooser("Undercoat Color", "undercoat_palette")}
   </div>
   <div class="catCreatorSections" id="accent1Section">
-    <div class="catCreatorSection">
-      <h2>Accent 1 Pattern</h2>
-      ${generateRadioList("accent_patterns", "accent_pattern_1")}
-    </div>
-    ${generateColorChooser("Accent 1 Color", "accent_palette_1")}
+	<div class="catCreatorSection">
+	  <h2>Accent 1 Pattern</h2>
+	  ${generateRadioList("accent_patterns", "accent_pattern_1")}
+	</div>
+	${generateColorChooser("Accent 1 Color", "accent_palette_1")}
   </div>
   <div class="catCreatorSections" id="accent2Section">
-    <div class="catCreatorSection">
-      <h2>Accent 2 Pattern</h2>
-      ${generateRadioList("accent_patterns", "accent_pattern_2")}
-    </div>
-    ${generateColorChooser("Accent 2 Color", "accent_palette_2")}
+	<div class="catCreatorSection">
+	  <h2>Accent 2 Pattern</h2>
+	  ${generateRadioList("accent_patterns", "accent_pattern_2")}
+	</div>
+	${generateColorChooser("Accent 2 Color", "accent_palette_2")}
   </div>
   <div class="catCreatorSections" id="eyesSection">
-    <div class="catCreatorSection">
-      <h2>Eye Pattern</h2>
-      ${generateRadioList("eye_patterns", "eye_pattern")}
-    </div>
-    <div class="catCreatorHalf">
-      <div class="catCreatorSection">
-        <h2>Eye Palette</h2>
-        ${generateEyePalettes("eye_palettes", "eye_palette")}
-      </div>
-      <div class="catCreatorSection">
-        <h2>Borough</h2>
-        ${generateBoroughChooser("borough")}
-      </div>
-    </div>
+	<div class="catCreatorSection">
+	  <h2>Eye Pattern</h2>
+	  ${generateRadioList("eye_patterns", "eye_pattern")}
+	</div>
+	<div class="catCreatorHalf">
+	  <div class="catCreatorSection">
+		<h2>Eye Palette</h2>
+		${generateEyePalettes("eye_palettes", "eye_palette")}
+	  </div>
+	  <div class="catCreatorSection">
+		<h2>Borough</h2>
+		${generateBoroughChooser("borough")}
+	  </div>
+	</div>
   </div>
   <div class="catCreatorSections" id="whiteCoverageSection">
-    <div class="catCreatorSection">
-      <h2>White Coverage</h2>
-      ${generateRadioList("white_coverage", "white_coverage")}
-    </div>
+	<div class="catCreatorSection">
+	  <h2>White Coverage</h2>
+	  ${generateRadioList("white_coverage", "white_coverage")}
+	</div>
   </div>`
 }
 
@@ -296,15 +296,15 @@ ${req.query.preview ? `<img src="${generateImageURL(req.query)}" alt="Generated 
 })
 const createCat = async (body) => {
   const renderRes = await fetch(endpoint + "/cat_creator/generate/?cat_type=onboarding", {
-    "method": "POST",
-    "headers": {
-      "Content-Type": "application/json",
-      "X-CSRFToken": csrfToken
-    },
-    "body": JSON.stringify(body)
+	"method": "POST",
+	"headers": {
+	  "Content-Type": "application/json",
+	  "X-CSRFToken": csrfToken
+	},
+	"body": JSON.stringify(body)
   })
   if (!renderRes.headers.get("Content-Type").startsWith("multipart/form-data")) {
-    return res.status(400).send({"error": "Invalid cat.", "content": await renderRes.text()})
+	return res.status(400).send({"error": "Invalid cat.", "content": await renderRes.text()})
   }
   const formData = await renderRes.formData()
   const enc = new TextDecoder("utf-8");
@@ -315,21 +315,21 @@ const createCat = async (body) => {
   catData.white_coverage_marks = renderData.marks
   console.log(catData)
   const apiRes = await fetch(endpoint + "/cats/", {
-    "method": "POST",
-    "headers": {
-      "Content-Type": "application/json",
-      "X-CSRFToken": csrfToken
-    },
-    "body": JSON.stringify(catData)
+	"method": "POST",
+	"headers": {
+	  "Content-Type": "application/json",
+	  "X-CSRFToken": csrfToken
+	},
+	"body": JSON.stringify(catData)
   })
   const data = await apiRes.json()
   const apiRes2 = await fetch(endpoint + "/cats/" + data.id + "/", {
-    "method": "PATCH",
-    "headers": {
-      "Content-Type": "application/json",
-      "X-CSRFToken": csrfToken
-    },
-    "body": JSON.stringify(catData)
+	"method": "PATCH",
+	"headers": {
+	  "Content-Type": "application/json",
+	  "X-CSRFToken": csrfToken
+	},
+	"body": JSON.stringify(catData)
   })
   const data2 = await apiRes2.json()
   return data2
@@ -371,96 +371,96 @@ app.get('/onboarding/welcome', async (req, res) => {
 
 app.get('/cats/:id', async (req, res) => {
   const catRes = await fetch(endpoint + "/cats/" + req.params.id + "/", {
-    "method": "GET",
-    "headers": {
-      "Content-Type": "application/json",
-      "X-CSRFToken": csrfToken
-    }
+	"method": "GET",
+	"headers": {
+	  "Content-Type": "application/json",
+	  "X-CSRFToken": csrfToken
+	}
   })
   if (catRes.status === 404) return res.status(404).send(await generatePage(req, `Cat not found.`))
   if (catRes.status === 500) return res.status(503).send(await generatePage(req, `This cat is currently unavailable.`))
   const catData = await catRes.json()
   const dropdownRes = await fetch(endpoint + "/cat_creator/dropdown_options/", {
-    "method": "GET",
-    "headers": {
-      "Content-Type": "application/json",
-      "X-CSRFToken": csrfToken
-    }
+	"method": "GET",
+	"headers": {
+	  "Content-Type": "application/json",
+	  "X-CSRFToken": csrfToken
+	}
   })
   const dropdownData = await dropdownRes.json()
   const imageRes = await fetch(catData.image)
   const boroughData = imageRes.status === 404 ? await (await fetch(endpoint + "/boroughs/", {
-    "method": "GET",
-    "headers": {
-      "Content-Type": "application/json",
-      "X-CSRFToken": csrfToken
-    }
+	"method": "GET",
+	"headers": {
+	  "Content-Type": "application/json",
+	  "X-CSRFToken": csrfToken
+	}
   })).json() : null;
   const generateStat = (name, key, special) => `<div class="catStat${special ? " catStatSpecial" : ""}">
-      <span class="catStatName">${name}</span>
-      <span class="catStatQuality">poor</span>
-      <span class="catStatValue">${typeof key === "string" ? catData[key] : key}</span>
-      ${special ? "" : `<div class="catStatDice">D1 | (-5)</div>`}
-    </div>`
+	  <span class="catStatName">${name}</span>
+	  <span class="catStatQuality">poor</span>
+	  <span class="catStatValue">${typeof key === "string" ? catData[key] : key}</span>
+	  ${special ? "" : `<div class="catStatDice">D1 | (-5)</div>`}
+	</div>`
   const generateAppearancePart = (frontendKey, patternKey, paletteKey) => `      <div class="catAppearancePart">
-        <img src="${catData.front_end_genetic_data[frontendKey]}" alt="Genetic pattern preview">
-        <div class="catAppearanceDetails">
-       <span>${catData.genetic_data[patternKey]}</span>
-      <span>${catData.genetic_data[paletteKey]}</span>
-        </div>
-        <div style="background: ${dropdownData.palettes.find(palette => palette.name.toLowerCase() === catData.genetic_data[paletteKey].toLowerCase()).preview_color}" class="catAppearanceColor"></div>
-      </div>`
+		<img src="${catData.front_end_genetic_data[frontendKey]}" alt="Genetic pattern preview">
+		<div class="catAppearanceDetails">
+	   <span>${catData.genetic_data[patternKey]}</span>
+	  <span>${catData.genetic_data[paletteKey]}</span>
+		</div>
+		<div style="background: ${dropdownData.palettes.find(palette => palette.name.toLowerCase() === catData.genetic_data[paletteKey].toLowerCase()).preview_color}" class="catAppearanceColor"></div>
+	  </div>`
   const imageURL = imageRes.status === 404 ? generateImageURL({...catData.genetic_data, "borough": boroughData.find(borough => borough.name === catData.genetic_data.borough).id}) : catData.image
   res.send(await generatePage(req, `<div class="catHeader">
   <div class="catHeaderInfo">
-    <div class="catImageWrapper">
-      <img src="${imageURL}" alt="Image of the cat.">
-    </div>
-    <div class="catBiologicalInfo">
-      <span>${catData.name}</span>
-      <span>${catData.created_at}</span>
-      <span>ID #${catData.id}</span>
-    </div>
+	<div class="catImageWrapper">
+	  <img src="${imageURL}" alt="Image of the cat.">
+	</div>
+	<div class="catBiologicalInfo">
+	  <span>${catData.name}</span>
+	  <span>${catData.created_at}</span>
+	  <span>ID #${catData.id}</span>
+	</div>
   </div>
 </div>
 <div class="catInformation">
   <div class="catStats">
-    ${generateStat("Stamina", "stamina")}
-    ${generateStat("Strength", "strength")}
-    ${generateStat("Sense", "sense")}
-    ${generateStat("Smarts", "smarts")}
-    ${generateStat("Fortune", "fortune", true)}
-    ${generateStat("Speed", "speed")}
-    ${generateStat("Savvy", "savvy")}
-    ${generateStat("Sorcery", "sorcery")}
-    ${generateStat("Summary", catData.stamina + catData.strength + catData.sense + catData.fortune + catData.speed + catData.savvy + catData.sorcery + catData.doom)}
-    ${generateStat("Doom", "doom", true)}
+	${generateStat("Stamina", "stamina")}
+	${generateStat("Strength", "strength")}
+	${generateStat("Sense", "sense")}
+	${generateStat("Smarts", "smarts")}
+	${generateStat("Fortune", "fortune", true)}
+	${generateStat("Speed", "speed")}
+	${generateStat("Savvy", "savvy")}
+	${generateStat("Sorcery", "sorcery")}
+	${generateStat("Summary", catData.stamina + catData.strength + catData.sense + catData.fortune + catData.speed + catData.savvy + catData.sorcery + catData.doom)}
+	${generateStat("Doom", "doom", true)}
   </div>
   <div class="catTraits">
-    <span class="catTraitsTitle">Traits</span>
-    <span>${catData.age} | ${catData.breed}</span>
-    <div class="catTraitsMain">
-      <div class="catAppearance">
-        ${generateAppearancePart("overcoat_pattern_preview", "overcoat_pattern", "overcoat_palette")}
-        ${generateAppearancePart("undercoat_pattern_preview", "undercoat_pattern", "undercoat_palette")}
-        ${generateAppearancePart("accent_1_pattern_preview", "accent_pattern_1", "accent_palette_1")}
-        ${generateAppearancePart("accent_2_pattern_preview", "accent_pattern_2", "accent_palette_2")}
-      </div>
-      <div class="catPhysicalTraits">
-        <div>
-          <span>Height 4 Paws</span>
-          <span class="catPhysicalValue">${catData.height_4_paws}</span>
-        </div>
-        <div>
-          <span>Height 2 Paws</span>
-          <span class="catPhysicalValue">${catData.height_2_paws}</span>
-        </div>
-        <div>
-          <span>Weight</span>
-          <span class="catPhysicalValue">${catData.weight}</span>
-        </div>
-      </div>
-    </div>
+	<span class="catTraitsTitle">Traits</span>
+	<span>${catData.age} | ${catData.breed}</span>
+	<div class="catTraitsMain">
+	  <div class="catAppearance">
+		${generateAppearancePart("overcoat_pattern_preview", "overcoat_pattern", "overcoat_palette")}
+		${generateAppearancePart("undercoat_pattern_preview", "undercoat_pattern", "undercoat_palette")}
+		${generateAppearancePart("accent_1_pattern_preview", "accent_pattern_1", "accent_palette_1")}
+		${generateAppearancePart("accent_2_pattern_preview", "accent_pattern_2", "accent_palette_2")}
+	  </div>
+	  <div class="catPhysicalTraits">
+		<div>
+		  <span>Height 4 Paws</span>
+		  <span class="catPhysicalValue">${catData.height_4_paws}</span>
+		</div>
+		<div>
+		  <span>Height 2 Paws</span>
+		  <span class="catPhysicalValue">${catData.height_2_paws}</span>
+		</div>
+		<div>
+		  <span>Weight</span>
+		  <span class="catPhysicalValue">${catData.weight}</span>
+		</div>
+	  </div>
+	</div>
   </div>
 </div>`, `<meta property="og:title" content="${catData.name}"><meta property="og:image" content="${imageURL}"><meta property="og:description" content="Created at ${catData.created_at}\nID: #${catData.id}"><link rel="stylesheet" href="/static/styles/cats.css">`))
 })
@@ -469,12 +469,12 @@ const calculateCatCount = async () => {
   let curr = 1
 
   const search = async (subtract, add) => {
-    curr -= subtract
-    while (1) {
-      const res = await fetch(endpoint + "/cats/" + curr + "/")
-      if (res.status === 404) break
-      curr += add
-    }
+	curr -= subtract
+	while (1) {
+	  const res = await fetch(endpoint + "/cats/" + curr + "/")
+	  if (res.status === 404) break
+	  curr += add
+	}
   }
 
   await search(0, 10000)
@@ -516,12 +516,12 @@ app.post('/api_sandbox', async (req, res) => {
   if (!req.body.url) return res.status(400).send(await generatePage(req, `No URL!`))
   if (req.body.csrftoken !== req.cookies.csrftoken) return res.status(401).send(await generatePage(req, "Session error!"))
   const payload = {
-    "method": req.body.method,
-    "headers": {
-      "Content-Type": "application/json",
-      "X-CSRFToken": req.cookies.csrftoken,
-      "Cookie": `sessionid=${req.cookies.sessionid}; csrftoken=${req.cookies.csrftoken}`
-    }
+	"method": req.body.method,
+	"headers": {
+	  "Content-Type": "application/json",
+	  "X-CSRFToken": req.cookies.csrftoken,
+	  "Cookie": `sessionid=${req.cookies.sessionid}; csrftoken=${req.cookies.csrftoken}`
+	}
   }
   if (req.body.method !== "GET" && req.body.method !== "OPTIONS") payload.body = req.body.body
   const result = await fetch(endpoint + req.body.url, payload)
@@ -532,6 +532,61 @@ Status: ${result.status}
 ${text}
 `))
 })
+
+app.get("/dens", async (req, res) => {
+  const data = await (await fetch(endpoint + "/dens/", {
+	"method": "GET",
+	"headers": {
+		"Content-Type": "application/json",
+		"X-CSRFToken": req.cookies.csrftoken,
+		"Cookie": `sessionid=${req.cookies.sessionid}; csrftoken=${req.cookies.csrftoken}`
+	}
+  })).json()
+  res.send(await generatePage(req, `
+  Dens list
+  <ul>
+  ${data.sort((a, b) => a.position - b.position).map(den => `
+    <li><a href="/dens/${den.id}">${den.name}</a></li>
+  `).join("")}
+  </ul>
+  `))
+})
+
+app.get("/dens/:id", async (req, res) => {
+	const dropdownRes = await fetch(endpoint + "/cat_creator/dropdown_options/", {
+		"method": "GET",
+		"headers": {
+		  "Content-Type": "application/json",
+		  "X-CSRFToken": csrfToken
+		}
+	  })
+	const dropdownData = await dropdownRes.json()
+  const data = await (await fetch(endpoint + "/cats/?den_id=" + req.params.id, {
+	"method": "GET",
+	"headers": {
+		"Content-Type": "application/json",
+		"X-CSRFToken": req.cookies.csrftoken,
+		"Cookie": `sessionid=${req.cookies.sessionid}; csrftoken=${req.cookies.csrftoken}`
+	}
+  })).json()
+  res.send(await generatePage(req, `
+  Cat list
+  <div class="catList">
+  ${data.length > 0 ? data.sort((a, b) => a.position - b.position).map(cat => `
+	<div class="cat"><a href="/cats/${cat.id}">
+	${cat.name}
+	<img src="${cat.image}" alt="Image of cat">
+	<div class="catAttributes">
+	<img src="${dropdownData.genders.find(gender => gender.name.toLowerCase() === cat.gender.toLowerCase()).image}" alt="${cat.gender}">
+	<img src="${cat.borough.emblem}" alt="${cat.borough.name}">
+	<img src="${dropdownData.ages.find(age => age.name.toLowerCase() === cat.age.toLowerCase()).image}" alt="${cat.age}">
+	</div>
+	</a></div>
+  `).join("") : "No cats yet."}
+  </div>
+  `, `<link rel="stylesheet" href="/static/styles/dens.css">`))
+})
+
 app.use(async (req, res) => {
   res.status(404).send(await generatePage(req, `You seem a bit lost. There's nothing to see here.`, `<meta property="og:title" content="404 Not Found">`))
 })
@@ -549,14 +604,14 @@ setInterval(async () => {
   if (cachedCatCount === null) return
   const lastKnownRes = await fetch("https://www.pawborough.net:8000/api/cats/" + cachedCatCount + "/")
   if (lastKnownRes.status === 404) {
-    lastCatPurge = new Date()
-    await calculateCatCount()
-    return
+	lastCatPurge = new Date()
+	await calculateCatCount()
+	return
   }
   while (1) {
-    const res = await fetch("https://www.pawborough.net:8000/api/cats/" + (cachedCatCount + 1) + "/")
-    if (res.status === 404) break
-    cachedCatCount += 1
+	const res = await fetch("https://www.pawborough.net:8000/api/cats/" + (cachedCatCount + 1) + "/")
+	if (res.status === 404) break
+	cachedCatCount += 1
   }
 }, 60000)
 
