@@ -466,7 +466,7 @@ app.get('/cats/:id', async (req, res) => {
 })
 
 const calculateCatCount = async () => {
-  let curr = 1
+  let curr = 2
 
   const search = async (subtract, add) => {
 	curr -= subtract
