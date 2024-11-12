@@ -69,10 +69,11 @@ body {
 .flex-grow {
   flex-grow: 1;
 }
-button, input[type=submit] {
+button, input[type=submit], .button {
   background: #2F2019;
   color: #E0C479;
   border: none;
+  font-size: 0.7rem;
   font-weight: 500;
   padding: 0.5rem 1rem;
   -webkit-appearance: none;

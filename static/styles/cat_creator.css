@@ -1,5 +1,9 @@
 @import url("/static/styles/forms.css");
 
+.catCreatorButtons {
+  margin-bottom: 1rem;
+}
+
 .catCreatorSections {
   display: flex;
   visibility: hidden;

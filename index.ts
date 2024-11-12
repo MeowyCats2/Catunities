@@ -8,6 +8,10 @@ const port: number = 3000;
 
 const csrfToken: string = "69SUegDcWzy6E8qlMN4lprexFnlWj4Iv"
 const endpoint: string = "https://www.pawborough.net:8000/api"
+const endpoints = {
+	"demo": "https://www.pawborough.net:8000/api",
+	"alpha": "https://alpha.pawborough.net:8000/api"
+}
 
 let cachedCatCount = null
 
@@ -191,13 +195,13 @@ const generateCatCreator = async (selected) => {
   <input type="radio" id="eyesRadio" class="sectionRadio" name="section">
   <input type="radio" id="whiteCoverageRadio" class="sectionRadio" name="section">
   <div class="catCreatorButtons">
-	<button type="button"><label for="generalRadio">General</label></button>
-	<button type="button"><label for="overcoatRadio">Overcoat</label></button>
-	<button type="button"><label for="undercoatRadio">Undercoat</label></button>
-	<button type="button"><label for="accent1Radio">Accent 1</label></button>
-	<button type="button"><label for="accent2Radio">Accent 2</label></button>
-	<button type="button"><label for="eyesRadio">Eyes</label></button>
-	<button type="button"><label for="whiteCoverageRadio">White Coverage</label></button>
+	<label for="generalRadio" class="button">General</label>
+	<label for="overcoatRadio" class="button">Overcoat</label>
+	<label for="undercoatRadio" class="button">Undercoat</label>
+	<label for="accent1Radio" class="button">Accent 1</label>
+	<label for="accent2Radio" class="button">Accent 2</label>
+	<label for="eyesRadio" class="button">Eyes</label>
+	<label for="whiteCoverageRadio" class="button">White Coverage</label>
   </div>
   <div class="catCreatorSections" id="generalSection">
 	<div class="catCreatorSection">
@@ -498,7 +502,7 @@ app.get('/last_cat_purge', async (req, res) => {
   res.send(await generatePage(req, lastCatPurge.toString(), `<meta property="og:title" content="Last Purge">`))
 })
 
-app.get('/api_sandbox', async (req, res) => {
+app.get('/:server/api_sandbox', async (req, res) => {
   res.send(await generatePage(req, `
 <form action="/api_sandbox" method="POST">
   <input type="hidden" name="csrftoken" value="${req.cookies.csrftoken}">
@@ -510,9 +514,9 @@ app.get('/api_sandbox', async (req, res) => {
   <textarea id="body" name="body"></textarea>
   <input type="submit" value="Submit">
 </form>
-`, `<meta property="og:title" content="API Sandbox">`))
+`, `<meta property="og:title" content="API Sandbox">`, "", server))
 })
-app.post('/api_sandbox', async (req, res) => {
+app.post('/:server/api_sandbox', async (req, res) => {
   if (!req.body.url) return res.status(400).send(await generatePage(req, `No URL!`))
   if (req.body.csrftoken !== req.cookies.csrftoken) return res.status(401).send(await generatePage(req, "Session error!"))
   const payload = {
@@ -524,13 +528,13 @@ app.post('/api_sandbox', async (req, res) => {
 	}
   }
   if (req.body.method !== "GET" && req.body.method !== "OPTIONS") payload.body = req.body.body
-  const result = await fetch(endpoint + req.body.url, payload)
+  const result = await fetch(endpoints[server] + req.body.url, payload)
   const text = (await result.text()).replaceAll(new RegExp(endpoint.replace("https", "http").replaceAll(".", "\\.") + "(.+?)\"", "g"), `<a href="/api_sandbox?url=$1">${endpoint.replace("https", "http")}$1</a>"`)
   res.send(await generatePage(req, `
 Status: ${result.status}
 <br/><br/>
 ${text}
-`))
+`, null, server))
 })
 
 app.get("/dens", async (req, res) => {
