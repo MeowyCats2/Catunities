@@ -2,7 +2,6 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import { Buffer } from "node:buffer";
 import { generateName } from "./generateName.ts"
-import sharp from "sharp";
 import "express-async-errors"
 const app = express();
 const port: number = 3000;
