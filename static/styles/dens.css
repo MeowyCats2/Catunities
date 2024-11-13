@@ -1,0 +1,31 @@
+.catList {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 1fr;
+  flex-grow: 0;
+}
+
+.cat a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  color: inherit;
+  text-decoration: none;
+}
+
+.cat img {
+  width: 80%;
+}
+
+.catAttributes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.catAttributes img {
+  width: 20%;
+}

@@ -2,6 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import { Buffer } from "node:buffer";
 import { generateName } from "./generateName.ts"
+import sharp from "sharp";
 import "express-async-errors"
 const app = express();
 const port: number = 3000;
@@ -143,7 +144,7 @@ app.post('/onboarding/borough', async (req, res) => {
   if (!apiRes.ok) await generatePage(req, "An unexpected error occured: " + JSON.stringify(await apiRes.json()))
   res.redirect(303, "/onboarding/founder#generalSection")
 })
-app.get('/cat.png', async (req, res) => {
+app.get('/cat.webp', async (req, res) => {
   const apiRes = await fetch(endpoint + "/cat_creator/generate/?cat_type=onboarding", {
 	"method": "POST",
 	"headers": {
@@ -275,7 +276,7 @@ app.get('/cat_creator', async (req, res) => {
   return res.send(await generatePage(req, `<form action="/cat_creator" method="POST">${await generateCatCreator(req.query)}<input type="submit" value="Submit"></form>`, `<link rel="stylesheet" href="/static/styles/cat_creator.css">`))
 })
 
-const generateImageURL = (body) => "/cat.png?data=" + encodeURIComponent(JSON.stringify({"gender": body.gender, "age": body.age, "breed": body.breed, "overcoat_pattern":body.overcoat_pattern,"overcoat_palette":body.overcoat_palette,"undercoat_pattern":body.undercoat_pattern,"undercoat_palette":body.undercoat_palette,"accent_pattern_1":body.accent_pattern_1,"accent_palette_1":body.accent_palette_1,"accent_pattern_2":body.accent_pattern_2,"accent_palette_2":body.accent_palette_2,"eye_pattern":body.eye_pattern,"eye_palette":body.eye_palette,"borough":body.borough,"white_coverage":body.white_coverage}))
+const generateImageURL = (body) => "/cat.webp?data=" + encodeURIComponent(JSON.stringify({"gender": body.gender, "age": body.age, "breed": body.breed, "overcoat_pattern":body.overcoat_pattern,"overcoat_palette":body.overcoat_palette,"undercoat_pattern":body.undercoat_pattern,"undercoat_palette":body.undercoat_palette,"accent_pattern_1":body.accent_pattern_1,"accent_palette_1":body.accent_palette_1,"accent_pattern_2":body.accent_pattern_2,"accent_palette_2":body.accent_palette_2,"eye_pattern":body.eye_pattern,"eye_palette":body.eye_palette,"borough":body.borough,"white_coverage":body.white_coverage}))
 
 app.post('/cat_creator', async (req, res) => {
   console.log(req.body)
