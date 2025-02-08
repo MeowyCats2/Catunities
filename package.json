@@ -6,12 +6,15 @@
     "dev": "bun --hot index.ts"
   },
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.8",
+    "@types/express": "^5.0.0",
     "bun-types": "^1.0.1"
   },
   "type": "module",
   "dependencies": {
     "cookie-parser": "^1.4.6",
     "express": "npm:express",
-    "express-async-errors": "^3.1.1"
+    "express-async-errors": "^3.1.1",
+    "sharp": "^0.33.5"
   }
 }
