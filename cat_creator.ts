@@ -151,13 +151,13 @@ ${result.join("\n")}
 	</div>
 	<div class="catCreatorSection">
 	  <h2>Marks (advanced)</h2>
-	  <textarea id="marksTextarea" placeholder="A newline seperated list of the marks." name="marks">${marks?.join("\n")}</textarea>
+	  <textarea id="marksTextarea" placeholder="A newline seperated list of the marks." name="marks">${marks?.join("\n") ?? ""}</textarea>
 	</div>
   </div>`
 }
 
 const convertToCatCreatorCat = (data: any) => {
-	if (data.marks && data.marks !== "undefined") {
+	if (data.marks && data.marks !== "") {
 		data.white_coverage_marks = data.marks.split("\n");
 		delete data.white_coverage;
 	}
@@ -207,18 +207,10 @@ app.post('/cat_creator', async (req, res) => {
 	const cat = await generateCat(JSON.stringify(convertToCatCreatorCat(req.body)));
 	if (!cat) return void await generatePage(req, "Invalid cat.")
 	catCache[requestId] = new WeakRef(cat.file);
-    if (req.body.enablePNG === "true") {
-        res.set("Set-Cookie", "enablePNG=true")
-    }
-    if (req.body.enablePNG === "false") {
-        res.set("Set-Cookie", "enablePNG=; expires=Thu, 01 Jan 1970 00:00:00 GMT;")
-    }
-	res.send(await generatePage(req, `<img src="/cached_cat.${(req.body.enablePNG ? req.body.enablePNG === "true" : req.cookies.enablePNG) ? "png" : "webp"}?requestId=${requestId}" alt="Generated cat." class="catPreview">
-<form action="/cat_creator" method="POST">
-${Object.entries(req.body).map(([key, value]) => key === "enablePNG" ? "" : `<input type="hidden" name="${key}" value="${value}">`).join("")}
-<input type="hidden" name="enablePNG" value="${(req.body.enablePNG ? req.body.enablePNG === "true" : req.cookies.enablePNG) ? "false": "true"}">
-${(req.body.enablePNG ? req.body.enablePNG === "true" : req.cookies.enablePNG) ? `<input type="submit" value="Disable PNG format conversion">` : `<input type="submit" value="Enable PNG format conversion for old browsers">`}
-</form><br/>
+	res.send(await generatePage(req, `<picture>
+	<source srcset="/cached_cat.webp?requestId=${requestId}" type="image/webp">
+	<img src="/cached_cat.png?requestId=${requestId}" alt="Generated cat." class="catPreview">
+</picture><br/>
 <form action="/cat_creator" method="POST">${await generateCatCreator(req.body as Record<string, string>, cat.data.marks)}<input type="submit" value="Submit"></form>`, `<meta property="og:title" content="Cat Creator">
 <link rel="stylesheet" href="/static/styles/cat_creator.css">`))
 })
